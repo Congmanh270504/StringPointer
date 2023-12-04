@@ -6,12 +6,16 @@ void menu()
 	printf("|| **************************Init***************************** ||\n");
 	printf("|| * 1.Nhap S1,S2 va xuat ra man hinh                        * ||\n");
 	printf("|| * 2.Doc S1,S2 tu File va xuat ra man hinh                 * ||\n");
-	printf("|| **************************Sum***************************  * ||\n");
+	printf("|| **************************Format*************************** ||\n");
 	printf("|| * 3.Xem chuoi S1 co chua so khong                         * ||\n");
-	printf("|| * 5.Tong cac so co chu so dau la chu so le                * ||\n");
-	printf("|| * 6.Tong cac so lon hon tri tuyet doi sau no              * ||\n");
-	printf("|| * 7.Tong cac phan tu tren dong k                          * ||\n");
-	printf("|| * 8.Tong cac phan tu o vi tri bien                        * ||\n");
+	printf("|| * 4.Chinh ve dung chuan form                              * ||\n");
+	printf("|| * 5.Xoa khoang trang thua                                 * ||\n");
+	printf("|| * 7.Chia cat chuoi ho va ten                              * ||\n");
+	printf("|| * 8.Tim ten trong chuoi ho ten                            * ||\n");
+	printf("|| * 9.Kiem tra chuoi co doi xung khong                      * ||\n");
+	printf("|| * 10.Tim vi tri cua S2 trong S1, khong co thi chen cuoi   * ||\n");
+	printf("|| * 11.Chen chuoi S2 vao chuoi S1 tai vi tri X              * ||\n");
+	printf("|| * 12.Xoa ki tu X trong chuoi S1                           * ||\n");
 	/*printf("|| **************************Sum***************************  * ||\n");
 	printf("|| * 3.Liet ke cac so hoan thien trong mang                  * ||\n");
 	printf("|| * 5.Tong cac so co chu so dau la chu so le                * ||\n");
@@ -64,23 +68,26 @@ void fixScanf()
 	char c;
 	while ((c = getchar()) != '\n' && c != EOF);
 }
-void Input(char*& s1, char*& s2)
+void Input(char*& s2)
 {
-	printf("Nhap ten cho Character 1: ");
-	fgets(s1, MaxSize, stdin);
-	fflush(stdin);
-	deleteEndline(s1);
 	printf("Nhap ten cho Character 2: ");
 	fgets(s2, MaxSize, stdin);
 	fflush(stdin);
 	deleteEndline(s2);
 }
-void Output(char* s1, char* s2)
+void Output(char* s)
 {
-	printf("Character 1 is: %s\n", s1);
-	printf("Character 2 is: %s\n", s2);
+	printf("Character is: %s\n", s);
 }
-void getvalueindex(char*& s, int& n)
+void OutputArrayString(char **s, int &m)
+{
+	printf("Chuoi mang:\n");
+	for (int i = 0; i < m; i++)
+	{
+		printf("%s\n", s[i]);
+	}
+}
+void getValueIndex(char*& s, int& n)
 {
 	for (int i = 0; i < n; i++)
 	{
@@ -97,6 +104,7 @@ void upper(char*& s, int& n)
 		}
 	}
 }
+
 void uppername(char*& s, int& n)
 {
 	if (s[0] >= 97)
@@ -112,31 +120,25 @@ void uppername(char*& s, int& n)
 
 	}
 }
-void insertFirstName(char* s1, char* s2, int startPos)
+
+void init(char **s, int &m)
 {
-	int lenFirstName = strlen(s1), lenSecondName = strlen(s2);
-	if (lenFirstName + lenSecondName > MaxSize) return;
-	if (startPos > lenFirstName)	startPos = lenFirstName;
-
-	if (startPos < lenFirstName)
+	/*
+	s = (char**)calloc(m, sizeof(char*));
+	for (int i = 0; i < m; i++)
 	{
-		char* temp = new char[lenFirstName - startPos + 1];
-		strcpy(temp, s1 + startPos);
-		puts(temp);
-
-		strcpy(s1 + startPos, s2);
-		puts(s1);
-
-		strcpy(s1 + startPos + lenSecondName, temp);
-		puts(s1);
-	}
-	else
+		s[i] = (char*)calloc(MaxSize, sizeof(char));
+	}*/
+	s = (char **)malloc(m * sizeof(char **));
+	for (int i = 0; i < m; i++)
 	{
-		strcpy(s1 + startPos, s2);
-		puts(s1);
+		s[i] = (char*)malloc(MaxSize * sizeof(char));
+		strcpy(s[i], "Hello");
+		puts(s[i]);
 	}
+	
 }
-void readFile(const char* filename, char* s1, char* s2)
+void readFile(const char* filename, char** &s, int &m)
 {
 	FILE* fi = fopen(filename, "rt");
 	if (!fi)
@@ -144,9 +146,14 @@ void readFile(const char* filename, char* s1, char* s2)
 		printf("Loi mo File!!\n");
 		return;
 	}
+	fscanf(fi, "%d\n", &m);
+	init(s, m);
+	for (int i = 0; i < m; i++)
+	{
+		fgets(s[i], MaxSize, fi);
+		//fscanf(fi, "%s", &s[i]);
+	}
 
-	fgets(s1, MaxSize, fi);
-	fgets(s2, MaxSize, fi);
 	fclose(fi);
 }
 void writeFile(const char* filename, char* s1, char* s2)
@@ -163,7 +170,66 @@ void writeFile(const char* filename, char* s1, char* s2)
 	fputs(s2, fo);
 	fclose(fo);
 }
-int checkS1String(char*& s1)
+
+void deleteChar(char *&s, int index)
+{
+	int len = strlen(s);
+	for (int i = index; i < len; i++)
+	{
+		s[i] = s[i + 1];
+	}
+	s[len - 1] = '\0';
+}
+void deleteExtraWhiteSpace(char *&s)
+{
+	int len = strlen(s);
+	for (int i = 0; i < len; i++)
+	{
+		if (s[i] == ' ' && s[i + 1] == ' ')
+		{
+			deleteChar(s, i);
+			i--;
+		}
+		else if (s[i] == '\0')
+		{
+			break;
+		}
+	}
+	if (s[0] == ' ')
+	{
+		deleteChar(s, 0);
+	}
+	if (s[strlen(s) - 1] == ' ')
+	{
+		deleteChar(s, strlen(s));
+	}
+}
+void realForm(char *&s)
+{
+	int len = strlen(s);
+	if (s[0] >= 'a' && s[0] <= 'z')
+	{
+		s[0] -= 32;
+	}
+	for (int i = 1; i < len; i++)
+	{
+		if (s[i] >= 'a' && s[i] <= 'z' && s[i - 1] == ' ')
+		{
+			s[i] -= 32;
+		}
+		else if (s[i] >= 'A' && s[i] <= 'Z')
+		{
+			if (s[i - 1] == ' ')
+			{
+				continue;
+			}
+			s[i] += 32;
+		}
+	}
+}
+
+
+int  checkS1String(char*& s1)
 {
 	int len = strlen(s1);
 	for (int i = 0; i < len; i++)
@@ -174,4 +240,100 @@ int checkS1String(char*& s1)
 		}
 	}
 	return 1;
+}
+int  getLastSpace(char *&s)
+{
+	int len = strlen(s);
+	for (int i = len - 1; i >= 0; i--)
+	{
+		if (s[i] == ' ')
+		{
+			return i;
+		}
+	}
+	return 0;
+}
+void devideFisrtSecondName(char *&s)
+{
+	int startPos = getLastSpace(s);
+	int len = strlen(s);
+	char *tmp = new char[MaxSize];
+
+	strcpy(tmp, s + startPos + 1);
+	for (int i = startPos; i < len; i++)
+	{
+		s[i] = '\0';
+	}
+	printf("First name Character:%s\n", tmp);
+	printf("Seconde name Character:%s\n", s);
+}
+int  findName(char *&s, char *s1)
+{
+	if (strstr(s, s1))
+	{
+		return 1;
+	}
+	return 0;
+}
+int  checkOpposite(char *&s)
+{
+	int len = strlen(s);
+	for (int i = 0; i < len; i++)
+	{
+		if (s[i] != s[len - 1 - i])
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+int  getIndexS1InS(char *&s, char *&s1)
+{
+	char *p = strstr(s, s1);// tra ve vi tri dau tien cua s1
+	/*printf("Dia chi cua s : %p\n", s);
+	printf("Dia chi cua s1 : %p\n", s1);
+	printf("Dia chi cua p : %p\n", p);
+	for (int i = 0; i < strlen(s); i++)
+	{
+		printf("Dia chi cua s[%d] : %p\n", i, s[i]);
+
+	}*/
+	if (p != NULL)
+	{
+		return p - s;// 
+	}
+	return -1;
+}
+void insertStringIndex(char* str, char* strInsert, int index)
+{
+	int lenStr = strlen(str), lenStrInsert = strlen(strInsert);
+	if (lenStr + lenStrInsert > MaxSize) return;
+	if (index > lenStr)	index = lenStr;
+
+	if (index < lenStr)
+	{
+		char* temp = new char[lenStr - index + 1];
+		strcpy(temp, str + index);// copy cua chuoi str tu vi tri index vao cai tmp
+		// Luu vet
+		strcpy(str + index, strInsert);// copy cai chuoi can them vao cai vi tri
+
+		strcpy(str + index + lenStrInsert, temp);// gan cai luu vet vao cuoi chuoi sau khi chen 
+	}
+	else
+	{
+		//strcpy(str + index, strInsert);
+		strcat(str, strInsert);
+		puts(str);
+	}
+}
+void deleleAllChar(char *&s, char c)
+{
+	int len = strlen(s);
+	for (int i = 0; i < len; i++)
+	{
+		if (s[i] == c)
+		{
+			deleteChar(s, i);
+		}
+	}
 }
