@@ -5,7 +5,7 @@ void menu()
 	printf("=============================Menu================================\n");
 	printf("|| **************************Init***************************** ||\n");
 	printf("|| * 1.Nhap S1,S2 va xuat ra man hinh                        * ||\n");
-	printf("|| * 2.Doc S1,S2 tu File va xuat ra man hinh                 * ||\n");
+	printf("|| * 2.Doc mang chuoi tu File va xuat ra man hinh            * ||\n");
 	printf("|| **************************Format*************************** ||\n");
 	printf("|| * 3.Xem chuoi S1 co chua so khong                         * ||\n");
 	printf("|| * 4.Chinh ve dung chuan form                              * ||\n");
@@ -16,39 +16,8 @@ void menu()
 	printf("|| * 10.Tim vi tri cua S2 trong S1, khong co thi chen cuoi   * ||\n");
 	printf("|| * 11.Chen chuoi S2 vao chuoi S1 tai vi tri X              * ||\n");
 	printf("|| * 12.Xoa ki tu X trong chuoi S1                           * ||\n");
-	/*printf("|| **************************Sum***************************  * ||\n");
-	printf("|| * 3.Liet ke cac so hoan thien trong mang                  * ||\n");
-	printf("|| * 5.Tong cac so co chu so dau la chu so le                * ||\n");
-	printf("|| * 6.Tong cac so lon hon tri tuyet doi sau no              * ||\n");
-	printf("|| * 7.Tong cac phan tu tren dong k                          * ||\n");
-	printf("|| * 8.Tong cac phan tu o vi tri bien                        * ||\n");
-	printf("|| **************************Count**************************** ||\n");
-	printf("|| * 9.So lan xuat cua gia tri K                             * ||\n");
-	printf("|| * 8.Tong cac phan tu o vi tri bien                        * ||\n");
-	printf("|| * 10.Dem cac phan tu chan,le,am,duong,nguyen to           * ||\n");
-	printf("|| **************************Lised**************************** ||\n");
-	printf("|| * 11.Liet ke cac cot co tong nho nhat trong mang 2 chieu  * ||\n");
-	printf("|| * 12.Liet ke cac dong co nhieu so hoan thien nhat         * ||\n");
-	printf("|| * 13.Liet ke cac dong chi co chan                         * ||\n");
-	printf("|| ***************************FindNumber********************** ||\n");
-	printf("|| * 14.Tim gia tri xuat hien nhieu nhat trong mang 2 chieu  * ||\n");
-	printf("|| * 15.Tim so nguyen to nho nhat trong mang                 * ||\n");
-	printf("|| * 16.Tim so lon nhat trong dong K                         * ||\n");
-	printf("|| * 17.Tim so nho nhat trong dong K                         * ||\n");
-	printf("|| * 18.Tim so lon nhat trong cot  K                         * ||\n");
-	printf("|| * 19.Tim so nho nhat trong cot  K                         * ||\n");
-	printf("|| ***************************Sort**************************** ||\n");
-	printf("|| * 20.Sap xep dong chan tang, dong le giam                 * ||\n");
-	printf("|| * 21.Sap xep cot chan tang, cot le giam                   * ||\n");
-	printf("|| * 22.Sap xep Zic-Zac                                      * ||\n");
-	printf("|| ***************************Delete************************** ||\n");
-	printf("|| * 23.Xoa dong K                                           * ||\n");
-	printf("|| * 24.Xoa cot  K                                           * ||\n");
-	printf("|| * 25.Xoa dong co phan tu X                                * ||\n");
-	printf("|| * 26.Xoa cot  co phan tu X                                * ||\n");
-	printf("|| ***************************Swap**************************** ||\n");
-	printf("|| * 27.Doi vi tri 2 dong i va j                             * ||\n");
-	printf("|| * 28.Doi vi tri 2 cot  i va j                             * ||\n");*/
+	printf("|| * 13.Xuat chuoi khong chua cac ky so                      * ||\n");
+	printf("|| * 14.Dem so lan thay doi cua chuoi S1 thanh chuoi S2      * ||\n");
 	printf("|| **************************WriteFile************************ ||\n");
 	printf("|| * 30.Ghi mang so phan so tu File                          * ||\n");
 	printf("|| * 0.Thoat chuong trinh			             * ||\n");
@@ -68,12 +37,12 @@ void fixScanf()
 	char c;
 	while ((c = getchar()) != '\n' && c != EOF);
 }
-void Input(char*& s2)
+void Input(char*& s)
 {
-	printf("Nhap ten cho Character 2: ");
-	fgets(s2, MaxSize, stdin);
+	printf("Name Character: ");
+	fgets(s, MaxSize, stdin);
 	fflush(stdin);
-	deleteEndline(s2);
+	deleteEndline(s);
 }
 void Output(char* s)
 {
@@ -121,22 +90,14 @@ void uppername(char*& s, int& n)
 	}
 }
 
-void init(char **s, int &m)
+void init(char **&s, int &m)
 {
-	/*
-	s = (char**)calloc(m, sizeof(char*));
+	//s = (char **)malloc(m * sizeof(char **));
+	s = new char*[m];
 	for (int i = 0; i < m; i++)
 	{
-		s[i] = (char*)calloc(MaxSize, sizeof(char));
-	}*/
-	s = (char **)malloc(m * sizeof(char **));
-	for (int i = 0; i < m; i++)
-	{
-		s[i] = (char*)malloc(MaxSize * sizeof(char));
-		strcpy(s[i], "Hello");
-		puts(s[i]);
+		s[i] = new char[MaxSize];
 	}
-	
 }
 void readFile(const char* filename, char** &s, int &m)
 {
@@ -151,10 +112,12 @@ void readFile(const char* filename, char** &s, int &m)
 	for (int i = 0; i < m; i++)
 	{
 		fgets(s[i], MaxSize, fi);
+		fflush(stdin);
+		deleteEndline(s[i]);
 		//fscanf(fi, "%s", &s[i]);
 	}
-
 	fclose(fi);
+	printf("Doc File thanh cong\n");
 }
 void writeFile(const char* filename, char* s1, char* s2)
 {
@@ -227,14 +190,12 @@ void realForm(char *&s)
 		}
 	}
 }
-
-
-int  checkS1String(char*& s1)
+int  checkString(char*& s)
 {
-	int len = strlen(s1);
+	int len = strlen(s);
 	for (int i = 0; i < len; i++)
 	{
-		if (s1[i] >= '1' && s1[i] <= '9')
+		if (s[i] >= '1' && s[i] <= '9')
 		{
 			return 0;
 		}
@@ -289,15 +250,7 @@ int  checkOpposite(char *&s)
 }
 int  getIndexS1InS(char *&s, char *&s1)
 {
-	char *p = strstr(s, s1);// tra ve vi tri dau tien cua s1
-	/*printf("Dia chi cua s : %p\n", s);
-	printf("Dia chi cua s1 : %p\n", s1);
-	printf("Dia chi cua p : %p\n", p);
-	for (int i = 0; i < strlen(s); i++)
-	{
-		printf("Dia chi cua s[%d] : %p\n", i, s[i]);
-
-	}*/
+	char *p = strstr(s, s1);
 	if (p != NULL)
 	{
 		return p - s;// 
@@ -336,4 +289,63 @@ void deleleAllChar(char *&s, char c)
 			deleteChar(s, i);
 		}
 	}
+}
+void getStringNoNumber(char **&s, int &m)
+{
+	for (int i = 0; i < m; i++)
+	{
+		if (checkString(s[i]))
+		{
+			puts(s[i]);
+		}
+	}
+}
+void countTransformation(char *&s1, char *&s2)
+{
+	int insertChar = 0, deleteChar = 0, changeChar = 0;
+	int len1 = strlen(s1);
+	int len2 = strlen(s2);
+	if (strcmp(s1, s2) == 0)
+	{
+		printf("2 Chuoi giong nhau!!\n");
+		return;
+	}
+	if (strlen(s1) < strlen(s2))
+	{
+		insertChar = strlen(s2) - strlen(s1);
+		for (int i = 0; i < len1; i++)
+		{
+			if (s1[i] != s2[i])
+			{
+				s1[i] = s2[i];
+				changeChar++;
+			}
+		}
+	}
+	else
+	{
+		deleteChar = strlen(s1) - strlen(s2);
+		for (int i = 0; i < len2; i++)
+		{
+			if (s1[i] != s2[i])
+			{
+				s1[i] = s2[i];
+				changeChar++;
+			}
+		}
+		s1[len1 - deleteChar] = '\0';
+	}
+	
+	printf("So lan them ki tu: %d\nSo lan xoa ki tu: %d\nSo lan thay doi ki tu: %d\n", insertChar, deleteChar, changeChar);
+}
+void deletePointer(int **&s,int m, char *&s1, char *&s2, char *&tmp)
+{
+	delete s1;
+	delete s2;
+	delete tmp;
+	for (int i = 0; i < m; i++)
+	{
+		delete s[i];
+	}
+	delete s;
 }
