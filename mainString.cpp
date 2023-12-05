@@ -10,8 +10,8 @@ int main()
 	const char* fi = "input-String.txt";
 	const char* fo = "output-String.txt";
 	int startPos, choose, check, index, c, m;
-	//memset(s1, 0, MaxSize);// memory setting ( khoi tao chuoi do vs toan bo gia tri 0 trong bang ma~ ASII)
-	//memset(s2, 0, MaxSize);
+	memset(s1, 0, MaxSize);// memory setting ( khoi tao chuoi do vs toan bo gia tri 0 trong bang ma~ ASII)
+	memset(s2, 0, MaxSize);
 	char **s = NULL;
 
 	menu();
@@ -27,15 +27,7 @@ int main()
 			Output(s2);
 			break;
 		case 2:
-			/*readFile(fi, s, m);
-			OutputArrayString(s, m);*/
-			printf("Nhap m: ");
-			scanf("%d", &m);
-			init(s, m);
-			if (s == NULL)
-			{
-				printf("NULL\n");
-			}
+			readFile(fi, s, m);
 			OutputArrayString(s, m);
 			break;
 		case 3:
@@ -45,7 +37,7 @@ int main()
 			}
 			else
 			{
-				if (checkS1String(s1))
+				if (checkString(s1))
 				{
 					printf("Trong chuoi khong co chua so!!\n");
 				}
@@ -53,7 +45,6 @@ int main()
 				{
 					printf("Chuoi co chua so!!\n");
 				}
-
 			}
 			break;
 		case 4:
@@ -222,6 +213,25 @@ int main()
 				Output(s1);
 			}
 			break;
+		case 13:
+			if (s == NULL)
+			{
+				printf("Please! Choose option 2 \n ");
+			}
+			else
+			{
+				printf("Chuoi khong chua ky so la:\n");
+				getStringNoNumber(s, m);
+			}
+			break;
+		case 14:
+			
+				Input(s1);
+				Input(s2);
+				countTransformation(s1, s2);
+				printf("Chuoi S1 sau khi thay doi: ");
+				puts(s1);
+			break;
 		case 30:
 			if (s1[0] == '\0' || s2 == '\0')
 			{
@@ -234,12 +244,13 @@ int main()
 			}
 			break;
 		case 0:
+			
+
 			printf("HAVE A NICE DAY SIR!!\n");
 			break;
 		default:
 			break;
 		}
 	} while (choose != 0);
-	free(s1);
 	_getch();
 }
